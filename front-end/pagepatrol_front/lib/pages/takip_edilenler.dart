@@ -75,13 +75,13 @@ class Follow extends StatelessWidget {
                     ],
                   )),
               IconButton(
-                icon: const Icon(Icons.notifications),
+                icon: const Icon(Icons.edit),
                 onPressed: () {
                   Navigator.pushNamed(context, '/edit');
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.verified_user),
+                icon: const Icon(Icons.people),
                 onPressed: () {
                   Navigator.pushNamed(context, '/user');
                 },

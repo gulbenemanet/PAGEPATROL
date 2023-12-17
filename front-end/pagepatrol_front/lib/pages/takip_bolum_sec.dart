@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-bool value = false;
-bool _value = false;
+//bool value = false;
+//bool _value = false;
 
 class SelectSection extends StatelessWidget {
   const SelectSection({super.key});

@@ -19,7 +19,7 @@ class _NotificationsState extends State<Notifications> {
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Bildirim Ayarları"),
+            Text("Bildirim Kanalları", style: TextStyle(fontSize: 20)),
             Container(
               child: Column(
                 children: <Widget>[
@@ -84,7 +84,7 @@ class _NotificationsState extends State<Notifications> {
             Container(
               child: Column(
                 children: <Widget>[
-                  Text("Bildirim Ses Tonu"),
+                  Text("Bildirim Ses Tonu", style: TextStyle(fontSize: 20)),
                   Row(
                     children: [
                       Expanded(

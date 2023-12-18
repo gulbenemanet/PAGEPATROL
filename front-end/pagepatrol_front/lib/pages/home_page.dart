@@ -28,49 +28,60 @@ class HomePage extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
             ),
-            ElevatedButton(
-                child: const Text("Login"),
-                onPressed: () {
-                  // go to new page
-                  Navigator.pushNamed(context, '/addsite');
-                }),
-
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    child: const Text("Login"),
+                    onPressed: () {
+                      // go to new page
+                      Navigator.pushNamed(context, '/addsite');
+                    }),
+                SizedBox(width: 20),
+                ElevatedButton(
+                    child: const Text("Kayıt Ol"),
+                    onPressed: () {
+                      // go to new page
+                      Navigator.pushNamed(context, '/kayit');
+                    }),
+              ],
+            ),
             const Text("OR"),
+            /*
             ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xFF272932),
-                  backgroundColor: Color(0xFFB6C2D9),
-                ),
-                child: const Text("LOGIN WITH FACEBOOK"),
-                onPressed: () {
-                  // go to new page
-                  //Navigator.pushNamed(context, '/select');
-                },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Color(0xFF272932),
+                backgroundColor: Color(0xFFB6C2D9),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xFF272932),
-                  backgroundColor: Color(0xFFB6C2D9),
-                ),
-                child: const Text("LOGIN WITH TWITTER"),
-                onPressed: () {
-                  // go to new page
-                  //Navigator.pushNamed(context, '/select');
-                },
+              child: const Text("LOGIN WITH FACEBOOK"),
+              onPressed: () {
+                // go to new page
+                //Navigator.pushNamed(context, '/select');
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Color(0xFF272932),
+                backgroundColor: Color(0xFFB6C2D9),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xFF272932),
-                  backgroundColor: Color(0xFFB6C2D9),
-                ),
-                child: const Text("LOGIN WITH GOOGLE"),
-                onPressed: () {
-                  // go to new page
-                  //Navigator.pushNamed(context, '/select');
-                },
+              child: const Text("LOGIN WITH TWITTER"),
+              onPressed: () {
+                // go to new page
+                //Navigator.pushNamed(context, '/select');
+              },
+            ),
+            */
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Color(0xFF272932),
+                backgroundColor: Color(0xFFB6C2D9),
               ),
-                
-            
+              child: const Text("LOGIN WITH GOOGLE"),
+              onPressed: () {
+                // go to new page
+                //Navigator.pushNamed(context, '/select');
+              },
+            ),
           ],
         )));
   }

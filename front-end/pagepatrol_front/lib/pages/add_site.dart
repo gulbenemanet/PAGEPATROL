@@ -22,16 +22,33 @@ class AddSite extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xFF272932),
-                  backgroundColor: Color(0xFFB6C2D9),
-                ),
-                child: const Text("Kaydet"),
-                onPressed: () {
-                  // go to new page
-                  Navigator.pushNamed(context, '/select');
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Color(0xFF272932),
+                      backgroundColor: Color(0xFFB6C2D9),
+                    ),
+                    child: const Text("Kaydet"),
+                    onPressed: () {
+                      // go to new page
+                      Navigator.pushNamed(context, '/select');
+                    },
+                  ),
+                  SizedBox(width: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Color(0xFF272932),
+                      backgroundColor: Color(0xFFB6C2D9),
+                    ),
+                    child: const Text("Geç"),
+                    onPressed: () {
+                      // go to new page
+                      Navigator.pushNamed(context, '/follow');
+                    },
+                  ),
+                ],
               ),
             ])));
   }

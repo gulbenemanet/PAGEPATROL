@@ -48,8 +48,8 @@ class Edit extends StatelessWidget {
             ),
             child: const Text("Yeni Site Ekle"),
             onPressed: () {
-              // Kaldırma
-              // Navigator.pushNamed(context, '/delete');
+              // Ekleme
+              Navigator.pushNamed(context, '/addsite');
             },
           ),
           Container(

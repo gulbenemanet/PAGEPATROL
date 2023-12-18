@@ -3,10 +3,9 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
-
+const User = require('../models/user_model');
 let db = require('../configs/db_connection');
-
+const jwt = require('jsonwebtoken');
 
 
 
@@ -67,66 +66,154 @@ const scrapLink = (req, res) => { //link formdan gelmeli, web scrap yapacak
 }
 
 const signIn = async(req, res) => {
-    db.get('SELECT * FROM users WHERE userName = ?', [req.body.userName], (err, user) => {
+    const user = await User.findOne({
+        userName: req.body.userName
+    }, async(err, user) => {
+        //console.log(user);
         if (err) {
-            return res.status(500).json({ error: 'Veritabanında bir hata oluştu.' + err });
-        }
-        if (!user) {
-            return res.status(401).json({ error: 'Kullanıcı bulunamadı.' });
-        }
-        bcrypt.compare(req.body.password, user.password, (bcryptErr, result) => {
-            if (bcryptErr) {
-                return res.status(500).json({ error: 'Şifre karşılaştırma sırasında bir hata oluştu.' });
-            }
+            res.json(err)
+        } else if (!user) {
+            res.status(404).json({
+                    "success": false,
+                    "code": 404,
+                    "message": "Verilen userName bilgileri hatalıdır."
+                }) // e posta hatalı
+        } else {
+            bcrypt.compare(req.body.password, user.password, (error, result) => {
+                //console.log(req.body.password + user.password);
+                if (error) {
+                    res.json(error)
+                } else if (!result) {
+                    res.status(404).json({
+                            "success": false,
+                            "code": 404,
+                            "message": "Verilen password bilgileri hatalıdır.",
+                        }) // şifre hatalı
+                } else if (result) {
+                    const token = jwt.sign({
+                        id: user._id
+                    }, 'supersecret', {
+                        expiresIn: '24h'
+                    })
+                    res.status(200).json({
+                        "success": true,
+                        "code": 200,
+                        "message": "Girişiniz başarıyla yapıldı.",
+                        "data": {
+                            profile: user,
+                            token: token
+                        }
+                    })
+                }
 
-            if (!result) {
-                return res.status(401).json({ error: 'Şifre yanlış.' });
-            }
-
-            res.status(200).json({ message: 'Giriş başarılı.' });
-        });
+            })
+        }
     })
 }
 
 const signUp = async(req, res) => {
     if (req.err) {
         console.log(req.err);
+        if (req.err.details[0].type == 'any.required') {
+            res.status(req.err.statusCode).json({
+                success: false,
+                code: 400,
+                message: "Lütfen bütün alanları doldurun."
+            })
+        } else if (req.err.details[0].type == 'string.email') {
+            res.status(req.err.statusCode).json({
+                success: false,
+                code: 400,
+                message: "Lütfen geçerli bir email girin."
+            })
+        } else if (req.err.details[0].type == 'string.pattern.base') {
+            res.status(req.err.statusCode).json({
+                success: false,
+                code: 400,
+                message: "Lütfen geçerli bir telefon numarası girin."
+            })
+        }
     } else {
         try {
             var hashedPassword = await bcrypt.hash(req.body.password, 8);
-            let infos = [req.body.name, req.body.lastName, req.body.email, hashedPassword, req.body.userName, req.body.phoneNumber]
-            db.run('INSERT INTO users(name, lastName, email, password, userName, phoneNumber) VALUES(?, ?, ?, ?, ?, ?)', infos, (err, rows) => {
+            const user = User.create({
+                userName: req.body.userName,
+                name: req.body.name,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                password: hashedPassword,
+                phoneNumber: req.body.phoneNumber,
+            }, (err, user) => {
                 if (err) {
-                    return res.status(500).json({ error: 'Veritabanında bir hata oluştu.' + err });
+                    if (err.code == 11000) {
+                        res.status(409).json({
+                            "success": false,
+                            "code": 409,
+                            "message": `Daha önceden bu ${Object.keys(err.keyPattern)[0]} ile kaydolunmuş.`,
+                        })
+                        console.log(err)
+                    } else if (err) {
+                        res.json(err)
+                    }
                 } else {
-                    res.status(200).json({ message: 'Kayıt başarılı.' });
+                    const token = jwt.sign({
+                        id: user._id
+                    }, 'supersecret', {
+                        expiresIn: '24h'
+                    })
+                    res.status(200).json({
+                        "success": true,
+                        "code": 200,
+                        "message": "Database'e ekleme yapıldı.",
+                        "data": {
+                            profile: user,
+                            token: token
+                        }
+                    })
                 }
             })
-
         } catch (err) {
             res.json(err)
         }
     }
 }
 
-const users = (req, res) => {
-    let arr = [];
-    db.all('SELECT * FROM users', [], (err, rows) => {
-        if (err) {
-            throw err;
-        }
-        rows.forEach((row) => {
-            console.log(row);
-            arr.push(row);
-        });
-        res.status(200).json({ message: 'Kullanıcılar gönderildi.', data: arr });
-    });
+const users = async(req, res) => {
+    try {
+        const result = await User.find()
+            .select({ areas: 0, __v: 0 })
+        res.status(200).json({
+            "success": true,
+            "code": 200,
+            "message": "Kullanıcılar gönderildi.",
+            "data": result
+        })
+    } catch (err) {
+        console.log(err);
+    }
 }
 
+const signUpDeneme = (req, res) => {
+    res.render('signUp')
+}
+const signInDeneme = (req, res) => {
+    res.render('signIn')
+}
+const signinwithgoogle = (req, res) => {
+    // res.json(req.user)
+    if (req.user) {
+        res.json(req.user)
+    } else {
+        res.redirect('/')
+    }
+}
 
 module.exports = {
     scrapLink,
     signUp,
     signIn,
-    users
+    users,
+    signUpDeneme,
+    signInDeneme,
+    signinwithgoogle
 };

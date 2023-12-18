@@ -1,15 +1,11 @@
-const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
+require('dotenv').config()
+const mongoose = require('mongoose')
 
-
-// db.run('CREATE TABLE users(name text, lastName text, email text, password text, userName text, phoneNumber text, followingSites text)');
-
-// db.run('drop TABLE users');
-
-let db = new sqlite3.Database((path.resolve(__dirname, '../db/sample.db')), (err) => {
-    if (err) {
-        console.error("db'ye bağlanırken hata oluştu: " + err.message);
-    } else console.log('Connected to the sample database.');
-});
-
-module.exports = db;
+mongoose.connect('mongodb+srv://gulbenemanet:Rq8CIzUdjV479AjE@pagepatrol.r1sqrqf.mongodb.net/', {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true
+    })
+    .then(() => console.log("DB'ye bağlanldı"))
+    .catch(err => console.log("DB'ye bağlanırken hata oluştu: " + err))

@@ -30,7 +30,15 @@ const userSchema = new Schema({
     phoneNumber: {
         type: String,
         unique: true
-    }
+    },
+    followedSites: [{
+        name: {
+            type: String
+        },
+        link: {
+            type: String
+        }
+    }]
 }, { collection: 'users' })
 
 const User = mongoose.model('users', userSchema)

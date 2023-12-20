@@ -208,6 +208,81 @@ const signinwithgoogle = (req, res) => {
     }
 }
 
+const updateUser = (req, res) => {
+    try {
+        const user = User.findOneAndUpdate({ _id: req.body._id }, { phoneNumber: req.body.phoneNumber, userName: req.body.userName }, { new: true }, (err, data) => {
+            if (err) {
+                res.json(err);
+            } else {
+                if (data !== null) {
+                    res.status(200).json({
+                        "success": true,
+                        "code": 200,
+                        "message": "Kullanıcı bilgileri eklendi.",
+                        "data": {
+                            profile: data,
+                        }
+                    })
+                } else {
+                    res.status(404).json({
+                        "success": false,
+                        "code": 404,
+                        "message": "Kullanıcı bulunamadı."
+                    })
+                }
+
+            }
+
+        })
+    } catch (err) {
+        res.json(err)
+    }
+}
+
+const followLink = (req, res) => {
+    try {
+        const user = User.findOneAndUpdate({ id: req.body.id }, { $push: { followedSites: req.body.site } }, { new: true }, (err, data) => {
+            if (err) {
+                res.json(err);
+            } else {
+                res.status(200).json({
+                    "success": true,
+                    "code": 200,
+                    "message": "Site takip edildi.",
+                    "data": {
+                        profile: data,
+                    }
+                })
+            }
+
+        })
+    } catch (err) {
+        res.json(err)
+    }
+}
+
+const unFollowLink = (req, res) => {
+    try {
+        const user = User.findOneAndUpdate({ id: req.body.id }, { $pull: { followedSites: { link: req.body.link } } }, { new: true }, (err, data) => {
+            if (err) {
+                res.json(err);
+            } else {
+                res.status(200).json({
+                    "success": true,
+                    "code": 200,
+                    "message": "Takip edilen site silindi.",
+                    "data": {
+                        profile: data,
+                    }
+                })
+            }
+
+        })
+    } catch (err) {
+        res.json(err)
+    }
+}
+
 module.exports = {
     scrapLink,
     signUp,
@@ -215,5 +290,8 @@ module.exports = {
     users,
     signUpDeneme,
     signInDeneme,
-    signinwithgoogle
+    signinwithgoogle,
+    followLink,
+    unFollowLink,
+    updateUser
 };

@@ -17,7 +17,7 @@ class SelectSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const Text("Takip etmek istediğiniz bölümü seçin"),
-                
+
                 /*Radio(
                   value: true,
                   groupValue: _value,

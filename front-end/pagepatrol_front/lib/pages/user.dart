@@ -25,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _getProfile(BuildContext context) async {
-    final String apiUrl = 'http://localhost:3000/profile';
+    final String apiUrl = 'http://10.0.2.2:3000/profile';
     String? token = await getTokenFromSF();
     try {
       final response = await http.get(

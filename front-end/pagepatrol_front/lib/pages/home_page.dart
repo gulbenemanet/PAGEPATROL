@@ -19,11 +19,59 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+    isLog();
+  }
+
+  Future<void> isLog() async {
+    String? token = await getTokenFromSF();
+    final String apiUrl = 'http://10.0.2.2:3000/profile';
+    // print(token);
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        // print(responseData);
+        Navigator.pushReplacementNamed(context, '/follow');
+      } else {
+        // Hata durumunda hata mesajını gösteriyorum.
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Hata: ${response.statusCode} - ${response.body}'),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+      // Genel hata durumunda hata mesajını gösteriyorum.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Bir hata oluştu: $e'),
+        ),
+      );
+    }
+  }
+
+  Future<String?> getTokenFromSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? tokenValue = prefs.getString('token');
+    return tokenValue;
+  }
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login() async {
-    final String apiUrl = 'http://localhost:3000/signIn';
+    final String apiUrl = 'http://10.0.2.2:3000/signIn';
 
     final Map<String, dynamic> requestData = {
       "userName": _usernameController.text,

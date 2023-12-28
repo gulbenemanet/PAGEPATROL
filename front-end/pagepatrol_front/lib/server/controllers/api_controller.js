@@ -6,9 +6,17 @@ const path = require('path');
 const User = require('../models/user_model');
 let db = require('../configs/db_connection');
 const jwt = require('jsonwebtoken');
-const Token = require('../models/token_model')
+const Token = require('../models/token_model');
+const mqtt = require('mqtt');
+const client = mqtt.connect('mqtt://localhost');
 
+client.on("error", (err) => {
+    console.log("MQTT bağlantısı kurulamadı: " + err);
+})
 
+client.on('connect', () => {
+    console.log('Mosquitto ile bağlantı sağlandı');
+});
 
 const scrapLink = (req, res) => { //link formdan gelmeli, web scrap yapacak
 
@@ -42,6 +50,7 @@ const scrapLink = (req, res) => { //link formdan gelmeli, web scrap yapacak
                 // Yeni blog yazıları varsa gerekli işlemleri yapabilirsiniz.
             } else {
                 console.log('Yeni blog yazısı bulunamadı.');
+                client.publish('notification', 'Yeni blog yazısı bulundu');
             }
         }
 
@@ -62,7 +71,7 @@ const scrapLink = (req, res) => { //link formdan gelmeli, web scrap yapacak
 
     checkNew();
 
-    let checkForNew = setInterval(checkNew, 60000); //dakikada bir sayfada yeni blog var mı kontrol ediyor.
+    let checkForNew = setInterval(checkNew, 600000); //dakikada bir sayfada yeni blog var mı kontrol ediyor.
 
 }
 

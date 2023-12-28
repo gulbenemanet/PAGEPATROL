@@ -65,7 +65,7 @@ class Server extends StatelessWidget {
 
   // Veriyi burada döndüğümüzü düşünelim.
   Future<Map<String, dynamic>> fetchData() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/users'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/users'));
     return json.decode(response.body);
   }
 }

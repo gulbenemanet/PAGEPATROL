@@ -19,7 +19,7 @@ class _EditState extends State<Edit> {
   }
 
   Future<void> _getUserSites() async {
-    final String apiUrl = 'http://localhost:3000/usersSites';
+    final String apiUrl = 'http://10.0.2.2:3000/usersSites';
     String? token = await getTokenFromSF();
 
     try {
@@ -64,7 +64,7 @@ class _EditState extends State<Edit> {
   }
 
   Future<void> _deleteSite(BuildContext context, String siteId) async {
-    final String apiUrl = 'http://localhost:3000/userId';
+    final String apiUrl = 'http://10.0.2.2:3000/userId';
     String? token = await getTokenFromSF();
     try {
       final response = await http.get(
@@ -78,7 +78,7 @@ class _EditState extends State<Edit> {
         String user_id = await jsonDecode(response.body);
         // print('Profile: $user_id');
         // Profil verilerini kullanabilirsiniz.
-        final String apiUrl = 'http://localhost:3000/unFollowLink';
+        final String apiUrl = 'http://10.0.2.2:3000/unFollowLink';
 
         final Map<String, dynamic> requestData = {
           "siteId": siteId,

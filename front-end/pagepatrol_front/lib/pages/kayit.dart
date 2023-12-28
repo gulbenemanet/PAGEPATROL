@@ -26,7 +26,7 @@ class _MyWidgetState extends State<Register> {
   String password = "Şifre Giriniz";
 
   Future<void> _signUp() async {
-    final String apiUrl = 'http://localhost:3000/signUp';
+    final String apiUrl = 'http://10.0.2.2:3000/signUp';
 
     final Map<String, dynamic> requestData = {
       "name": _nameController.text,

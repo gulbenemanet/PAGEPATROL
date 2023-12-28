@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         '/homepage': (context) => const HomePage(),
         '/addsite': (context) => AddSite(),
         '/select': (context) => SelectSection(),
-        '/follow': (context) => const Follow(),
+        '/follow': (context) => Follow(),
         '/edit': (context) => const Edit(),
         '/user': (context) => const User(),
         '/notification_settings': (context) => Notifications(),

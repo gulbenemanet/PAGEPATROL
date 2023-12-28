@@ -1,94 +1,65 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-//bool value = false;
-//bool _value = false;
+void main() => runApp(MyApp());
 
-class SelectSection extends StatelessWidget {
-  const SelectSection({super.key});
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: SelectSection(),
+    );
+  }
+}
+
+class SelectSection extends StatefulWidget {
+  @override
+  _SelectSectionState createState() => _SelectSectionState();
+}
+
+class _SelectSectionState extends State<SelectSection> {
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
+  late String htmlContent;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Seçim Yap"),
-        ),
-        body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text("Takip etmek istediğiniz bölümü seçin"),
-
-                /*Radio(
-                  value: true,
-                  groupValue: _value,
-                  onChanged: (value) {
-                    setState(() {
-                      _value = value as bool;
-                    });
-                  },
-                  activeColor: Colors.grey, // Seçildiğinde içi gri olacak
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),*/
-
-                /*InkWell(
-                  onTap: () {
-                    setState(() {
-                      _value = !_value;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.blue),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: _value
-                          ? Icon(
-                              Icons.check,
-                              size: 30.0,
-                              color: Colors.white,
-                            )
-                          : Icon(
-                              Icons.check_box_outline_blank,
-                              size: 30.0,
-                              color: Colors.blue,
-                            ),
-                    ),
-                  ),
-                ), */
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Color(0xFF272932),
-                    backgroundColor: Color(0xFFB6C2D9),
-                  ),
-                  child: const Text("Kaydet"),
-                  onPressed: () {
-                    // go to new page
-                    Navigator.pushNamed(context, '/follow');
-                  },
-                ),
-              ]),
-        ));
-  }
-
-  void setState(Null Function() param0) {}
-}
-
-/*class CircularCheckbox extends StatelessWidget {
-  final bool? value;
-  final ValueChanged<bool?>? onChanged;
-  const CircularCheckbox(
-      {Key? key, required this.value, required this.onChanged})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Transform.scale(
-      scale: 1.3,
-      child: Checkbox(
-        value: value,
-        onChanged: onChanged,
+      appBar: AppBar(
+        title: Text('WebView in Flutter'),
+      ),
+      body: WebView(
+        initialUrl:
+            'https://blog.logrocket.com', // İstediğiniz linki buraya koyun
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {
+          _controller.complete(webViewController);
+        },
+        javascriptChannels: <JavascriptChannel>[
+          JavascriptChannel(
+            name: 'elementClick',
+            onMessageReceived: (JavascriptMessage message) {
+              print('Clicked element tag name: ${message.message}');
+            },
+          ),
+        ].toSet(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final WebViewController controller = await _controller.future;
+          // Webview'de tıklanan elementin tag adını almak için JavaScript kodu
+          String script = '''
+            document.addEventListener('click', function(event) {
+              var clickedElement = event.target;
+              window.elementClick.postMessage(clickedElement);
+            });
+          ''';
+          // print('HTML Content: $htmlContent');
+          await controller.runJavascriptReturningResult(script);
+        },
+        child: Icon(Icons.send),
       ),
     );
   }
-}*/
+}

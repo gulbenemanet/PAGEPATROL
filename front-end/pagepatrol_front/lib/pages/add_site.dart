@@ -8,7 +8,7 @@ class AddSite extends StatelessWidget {
   final TextEditingController _siteLinkController = TextEditingController();
 
   Future<void> _addSite(BuildContext context) async {
-    final String apiUrl = 'http://localhost:3000/userId';
+    final String apiUrl = 'http://10.0.2.2:3000/userId';
     String? token = await getTokenFromSF();
     try {
       final response = await http.get(
@@ -22,7 +22,7 @@ class AddSite extends StatelessWidget {
         String user_id = await jsonDecode(response.body);
         // print('Profile: $user_id');
         // Profil verilerini kullanabilirsiniz.
-        final String apiUrl = 'http://localhost:3000/followLink';
+        final String apiUrl = 'http://10.0.2.2:3000/followLink';
 
         final Map<String, dynamic> requestData = {
           "site": {

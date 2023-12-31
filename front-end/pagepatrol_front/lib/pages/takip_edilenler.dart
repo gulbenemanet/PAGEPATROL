@@ -26,12 +26,14 @@ class _FollowState extends State<Follow> {
   // final client = MqttServerClient('localhost', '1883');
 
   // late MqttServerClient client;
+  // MqttServerClient? client;
   // @override
   // void initState() {
   //   super.initState();
 
   //   // MQTT client oluştur
   //   final client = MqttServerClient.withPort('mqtt://192.168.177.4', '', 1883);
+  //   final client = MqttServerClient.withPort('192.168.177.4', '', 1883);
 
   //   // MQTT olayları dinle
   //   client.onConnected = _onConnected;
@@ -46,6 +48,7 @@ class _FollowState extends State<Follow> {
   // @override
   // void dispose() {
   //   client.disconnect();
+  //   client?.disconnect();
   //   super.dispose();
   // }
 
@@ -54,6 +57,24 @@ class _FollowState extends State<Follow> {
 
   //   // Belirli bir konuyu dinlemeye başla
   //   client.subscribe('notification', MqttQos.exactlyOnce);
+  // }
+
+  // void _onDisconnected() {
+  //   print('MQTT broker ile bağlantı kesildi');
+  // }
+
+  // void _onSubscribed(String topic) {
+  //   print('Konu dinlemeye başlandı: $topic');
+  // }
+
+  //   client?.subscribe('notification', MqttQos.exactlyOnce);
+  //   client!.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+  //     final MqttPublishMessage message = c[0].payload as MqttPublishMessage;
+  //     final String payload =
+  //         MqttPublishPayload.bytesToStringAsString(message.payload.message);
+
+  //     print('Received message on topic ${c[0].topic}: $payload');
+  //   });
   // }
 
   // void _onDisconnected() {
@@ -112,6 +133,13 @@ class _FollowState extends State<Follow> {
                     //     client.publishMessage('notification',
                     //         MqttQos.exactlyOnce, builder.payload!);
                     //   },
+                    //   onPressed: _onConnected,
+                    //   // () {
+                    //   //   final builder = MqttClientPayloadBuilder();
+                    //   //   builder.addString('Merhaba from Flutter');
+                    //   //   client.publishMessage('notification',
+                    //   //       MqttQos.exactlyOnce, builder.payload!);
+                    //   // },
                     //   child: Text('Bildirim Gönder'),
                     // ),
                     Container(

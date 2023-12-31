@@ -42,8 +42,11 @@ class AddSite extends StatelessWidget {
           );
 
           if (response.statusCode == 200) {
-            final Map<String, dynamic> responseData = jsonDecode(response.body);
-            print(responseData);
+            final String responseData = response.body;
+            // print(responseData);
+            // print(_siteLinkController.text);
+            await addLinkToSF(_siteLinkController.text);
+            await addLinkIdToSF(responseData);
             Navigator.pushReplacementNamed(context, '/select');
           } else {
             // Hata durumunda hata mesajını gösteriyorum.
@@ -78,6 +81,16 @@ class AddSite extends StatelessWidget {
         ),
       );
     }
+  }
+
+  Future<void> addLinkToSF(String link) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('siteLink', link);
+  }
+
+  Future<void> addLinkIdToSF(String siteId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('siteId', siteId);
   }
 
   Future<String?> getTokenFromSF() async {

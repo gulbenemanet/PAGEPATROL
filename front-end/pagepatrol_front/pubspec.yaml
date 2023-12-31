@@ -38,12 +38,13 @@ dependencies:
   http: ^1.1.0
   shared_preferences: ^2.2.2
   google_sign_in: ^6.1.6
-  webview_flutter: ^2.0.15
+  webview_flutter: ^4.4.2
   flutter_inappwebview: ^5.0.0+5
   html: ^0.15.4
   provider: ^6.1.1
   socket_io_client: ^2.0.3+1
   mqtt_client: ^10.0.1
+  objectid: ^3.0.0
 
 
 

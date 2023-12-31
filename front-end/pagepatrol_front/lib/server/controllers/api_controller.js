@@ -1,79 +1,10 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-const fs = require('fs');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const User = require('../models/user_model');
 let db = require('../configs/db_connection');
 const jwt = require('jsonwebtoken');
 const Token = require('../models/token_model');
-const mqtt = require('mqtt');
-const client = mqtt.connect('mqtt://localhost');
 
-client.on("error", (err) => {
-    console.log("MQTT bağlantısı kurulamadı: " + err);
-})
-
-client.on('connect', () => {
-    console.log('Mosquitto ile bağlantı sağlandı');
-});
-
-const scrapLink = (req, res) => { //link formdan gelmeli, web scrap yapacak
-
-    const url = 'https://blog.logrocket.com';
-    const htmlFilePath = 'previous_page.html';
-
-    function checkForNewContent(html) {
-        const $ = cheerio.load(html);
-
-        // Örnek: Blog yazılarının tarih bilgilerini al
-        const postTimestamps = [];
-        $('.post .timestamp').each((index, element) => {
-            postTimestamps.push($(element).text());
-        });
-
-        // Önceki sayfa içeriğini kontrol et
-        if (fs.existsSync(htmlFilePath)) {
-            const previousHtml = fs.readFileSync(htmlFilePath, 'utf8');
-
-            const previous$ = cheerio.load(previousHtml);
-            const previousTimestamps = [];
-            previous$('.post .timestamp').each((index, element) => {
-                previousTimestamps.push(previous$(element).text());
-            });
-
-            // Yeni blog yazılarını tespit et
-            const newPosts = postTimestamps.filter(timestamp => !previousTimestamps.includes(timestamp));
-            if (newPosts.length > 0) {
-                console.log('Yeni blog yazıları tespit edildi:');
-                console.log(newPosts);
-                // Yeni blog yazıları varsa gerekli işlemleri yapabilirsiniz.
-            } else {
-                console.log('Yeni blog yazısı bulunamadı.');
-                client.publish('notification', 'Yeni blog yazısı bulundu');
-            }
-        }
-
-        // Güncel HTML içeriğini dosyaya kaydet
-        fs.writeFileSync(htmlFilePath, html, 'utf8');
-    }
-
-    let checkNew = () => {
-        axios.get(url)
-            .then(response => {
-                const html = response.data;
-                checkForNewContent(html);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    }
-
-    checkNew();
-
-    let checkForNew = setInterval(checkNew, 600000); //dakikada bir sayfada yeni blog var mı kontrol ediyor.
-
-}
 
 const signIn = async(req, res) => {
     const user = await User.findOne({
@@ -219,6 +150,20 @@ const profile = async(req, res) => {
 
 }
 
+const update_profile = async(req, res) => {
+    try {
+        const user = await User.findOneAndUpdate({ _id: req.body._id }, { name: req.body.name, lastName: req.body.lastName, email: req.body.email, phoneNumber: req.body.phoneNumber }, { new: true }, (err, data) => {
+            if (err) {
+                res.json(err);
+            } else {
+                res.json(data);
+            }
+        })
+    } catch (error) {
+        res.json(error)
+    }
+}
+
 
 const usersSites = async(req, res) => {
     // console.log(req.user.followedSites);
@@ -283,6 +228,27 @@ const updateUser = (req, res) => {
     }
 }
 
+const updateLink = (req, res) => {
+    try {
+        const user = User.findOneAndUpdate({ _id: req.body.id, 'followedSites._id': req.body.siteId }, { $set: { 'followedSites.$.htmlPart': req.body.htmlPart } }, { new: true }, (err, data) => {
+            if (err) {
+                res.json(err);
+            } else {
+                res.status(200).json({
+                    "success": true,
+                    "code": 200,
+                    "message": "Takipe başlandı.",
+                    "data": {
+                        data: data.followedSites,
+                    }
+                })
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const followLink = (req, res) => {
     try {
         const user = User.findOneAndUpdate({ _id: req.body.id }, { $push: { followedSites: req.body.site } }, { new: true }, (err, data) => {
@@ -297,18 +263,14 @@ const followLink = (req, res) => {
                         "message": "Kullanıcı bulunamadı.",
                     })
                 } else {
-                    res.status(200).json({
-                        "success": true,
-                        "code": 200,
-                        "message": "Site takip edildi.",
-                        "data": {
-                            profile: data,
-                        }
-                    })
+                    const newFollowedSiteId = data.followedSites[data.followedSites.length - 1]._id;
+                    // console.log("Yeni eklenen followedSite'nin ID'si:", newFollowedSiteId);
+                    res.json(newFollowedSiteId);
                 }
             }
 
         })
+        console.log(user);
     } catch (err) {
         res.json(err)
     }
@@ -363,7 +325,6 @@ const userId = async(req, res) => {
 }
 
 module.exports = {
-    scrapLink,
     signUp,
     signIn,
     users,
@@ -376,5 +337,7 @@ module.exports = {
     profile,
     logOut,
     userId,
-    usersSites
+    usersSites,
+    updateLink,
+    update_profile
 };

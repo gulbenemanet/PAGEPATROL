@@ -25,48 +25,55 @@ class Follow extends StatefulWidget {
 class _FollowState extends State<Follow> {
   // final client = MqttServerClient('localhost', '1883');
 
-  late MqttServerClient client;
-  @override
-  void initState() {
-    super.initState();
+  // MqttServerClient? client;
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    // MQTT client oluştur
-    final client = MqttServerClient.withPort('mqtt://192.168.177.4', '', 1883);
+  //   // MQTT client oluştur
+  //   final client = MqttServerClient.withPort('192.168.177.4', '', 1883);
 
-    // MQTT olayları dinle
-    client.onConnected = _onConnected;
-    client.onDisconnected = _onDisconnected;
-    client.onSubscribed = _onSubscribed;
-    client.onSubscribeFail = _onSubscribeFail;
+  //   // MQTT olayları dinle
+  //   client.onConnected = _onConnected;
+  //   client.onDisconnected = _onDisconnected;
+  //   client.onSubscribed = _onSubscribed;
+  //   client.onSubscribeFail = _onSubscribeFail;
 
-    // MQTT broker'ına bağlan
-    client.connect();
-  }
+  //   // MQTT broker'ına bağlan
+  //   client.connect();
+  // }
 
-  @override
-  void dispose() {
-    client.disconnect();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   client?.disconnect();
+  //   super.dispose();
+  // }
 
-  void _onConnected() {
-    print('MQTT broker ile bağlantı kuruldu');
+  // void _onConnected() {
+  //   print('MQTT broker ile bağlantı kuruldu');
 
-    // Belirli bir konuyu dinlemeye başla
-    client.subscribe('notification', MqttQos.exactlyOnce);
-  }
+  //   // Belirli bir konuyu dinlemeye başla
+  //   client?.subscribe('notification', MqttQos.exactlyOnce);
+  //   client!.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+  //     final MqttPublishMessage message = c[0].payload as MqttPublishMessage;
+  //     final String payload =
+  //         MqttPublishPayload.bytesToStringAsString(message.payload.message);
 
-  void _onDisconnected() {
-    print('MQTT broker ile bağlantı kesildi');
-  }
+  //     print('Received message on topic ${c[0].topic}: $payload');
+  //   });
+  // }
 
-  void _onSubscribed(String topic) {
-    print('Konu dinlemeye başlandı: $topic');
-  }
+  // void _onDisconnected() {
+  //   print('MQTT broker ile bağlantı kesildi');
+  // }
 
-  void _onSubscribeFail(String topic) {
-    print('Konu dinleme başarısız: $topic');
-  }
+  // void _onSubscribed(String topic) {
+  //   print('Konu dinlemeye başlandı: $topic');
+  // }
+
+  // void _onSubscribeFail(String topic) {
+  //   print('Konu dinleme başarısız: $topic');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -102,15 +109,16 @@ class _FollowState extends State<Follow> {
                       },
                       child: const Text("Siteye Git"),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        final builder = MqttClientPayloadBuilder();
-                        builder.addString('Merhaba from Flutter');
-                        client.publishMessage('notification',
-                            MqttQos.exactlyOnce, builder.payload!);
-                      },
-                      child: Text('Bildirim Gönder'),
-                    ),
+                    // ElevatedButton(
+                    //   onPressed: _onConnected,
+                    //   // () {
+                    //   //   final builder = MqttClientPayloadBuilder();
+                    //   //   builder.addString('Merhaba from Flutter');
+                    //   //   client.publishMessage('notification',
+                    //   //       MqttQos.exactlyOnce, builder.payload!);
+                    //   // },
+                    //   child: Text('Bildirim Gönder'),
+                    // ),
                     Container(
                       color: Color(0xFFB6C2D9),
                       child: Text("Siteden Gelen Veriler"),

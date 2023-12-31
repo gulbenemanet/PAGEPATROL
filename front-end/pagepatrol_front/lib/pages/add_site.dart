@@ -8,7 +8,7 @@ class AddSite extends StatelessWidget {
   final TextEditingController _siteLinkController = TextEditingController();
 
   Future<void> _addSite(BuildContext context) async {
-    final String apiUrl = 'http://10.0.2.2:3000/userId';
+    final String apiUrl = 'http://localhost:3000/userId';
     String? token = await getTokenFromSF();
     try {
       final response = await http.get(
@@ -22,7 +22,7 @@ class AddSite extends StatelessWidget {
         String user_id = await jsonDecode(response.body);
         // print('Profile: $user_id');
         // Profil verilerini kullanabilirsiniz.
-        final String apiUrl = 'http://10.0.2.2:3000/followLink';
+        final String apiUrl = 'http://localhost:3000/followLink';
 
         final Map<String, dynamic> requestData = {
           "site": {
@@ -91,20 +91,25 @@ class AddSite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Site Ekleme"),
-        ),
+        backgroundColor: Color(0xFF242038),
         body: Center(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-              Text("Takip etmek istediğiniz sitenin linkini yapıştırın:"),
+              Text(
+                "Takip etmek istediğiniz sitenin linkini yapıştırın:",
+                style: TextStyle(color: Color(0xFFCAC4CE)),
+              ),
               SizedBox(height: 20),
               TextField(
                 controller: _siteLinkController,
+                style: TextStyle(color: Color(0xFFF7ECE1)),
                 decoration: InputDecoration(
                   labelText: 'Eklenecek Site',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Color(0xFFF7ECE1)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFCAC4CE)),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -113,8 +118,8 @@ class AddSite extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Color(0xFF272932),
-                      backgroundColor: Color(0xFFB6C2D9),
+                      foregroundColor: Color(0xFFF7ECE1),
+                      backgroundColor: Color(0xFF8D86C9),
                     ),
                     child: const Text("Kaydet"),
                     onPressed: () => _addSite(context),
@@ -122,8 +127,8 @@ class AddSite extends StatelessWidget {
                   SizedBox(width: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Color(0xFF272932),
-                      backgroundColor: Color(0xFFB6C2D9),
+                      foregroundColor: Color(0xFFF7ECE1),
+                      backgroundColor: Color(0xFF8D86C9),
                     ),
                     child: const Text("Geç"),
                     onPressed: () {

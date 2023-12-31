@@ -12,14 +12,13 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Bildirim Ayarları"),
-        ),
+        backgroundColor: Color(0xFF242038),
         body: Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Bildirim Kanalları", style: TextStyle(fontSize: 20)),
+            Text("Bildirim Kanalları",
+                style: TextStyle(fontSize: 20, color: Color(0xFFF7ECE1))),
             Container(
               child: Column(
                 children: <Widget>[
@@ -29,8 +28,10 @@ class _NotificationsState extends State<Notifications> {
                           child: Container(
                         width: double.infinity,
                         child: RadioListTile(
-                            title: Text("SMS"),
+                            title: Text("SMS",
+                                style: TextStyle(color: Color(0xFFF7ECE1))),
                             value: 1,
+                            activeColor: Color(0xFFF7ECE1),
                             groupValue: deger,
                             onChanged: (int? gelen) {
                               setState(() {
@@ -47,8 +48,10 @@ class _NotificationsState extends State<Notifications> {
                           child: Container(
                         width: double.infinity,
                         child: RadioListTile(
-                            title: Text("Bildirim"),
+                            title: Text("Bildirim",
+                                style: TextStyle(color: Color(0xFFF7ECE1))),
                             value: 2,
+                            activeColor: Color(0xFFF7ECE1),
                             groupValue: deger,
                             onChanged: (int? gelen) {
                               setState(() {
@@ -65,8 +68,10 @@ class _NotificationsState extends State<Notifications> {
                           child: Container(
                         width: double.infinity,
                         child: RadioListTile(
-                            title: Text("Mail"),
+                            title: Text("Mail",
+                                style: TextStyle(color: Color(0xFFF7ECE1))),
                             value: 3,
+                            activeColor: Color(0xFFF7ECE1),
                             groupValue: deger,
                             onChanged: (int? gelen) {
                               setState(() {
@@ -84,15 +89,18 @@ class _NotificationsState extends State<Notifications> {
             Container(
               child: Column(
                 children: <Widget>[
-                  Text("Bildirim Ses Tonu", style: TextStyle(fontSize: 20)),
+                  Text("Bildirim Ses Tonu",
+                      style: TextStyle(fontSize: 20, color: Color(0xFFF7ECE1))),
                   Row(
                     children: [
                       Expanded(
                           child: Container(
                         width: double.infinity,
                         child: RadioListTile(
-                            title: Text("Ses1"),
+                            title: Text("Ses1",
+                                style: TextStyle(color: Color(0xFFF7ECE1))),
                             value: 4,
+                            activeColor: Color(0xFFF7ECE1),
                             groupValue: deger,
                             onChanged: (int? gelen) {
                               setState(() {
@@ -109,8 +117,10 @@ class _NotificationsState extends State<Notifications> {
                           child: Container(
                         width: double.infinity,
                         child: RadioListTile(
-                            title: Text("Ses2"),
+                            title: Text("Ses2",
+                                style: TextStyle(color: Color(0xFFF7ECE1))),
                             value: 5,
+                            activeColor: Color(0xFFF7ECE1),
                             groupValue: deger,
                             onChanged: (int? gelen) {
                               setState(() {
@@ -127,8 +137,10 @@ class _NotificationsState extends State<Notifications> {
                           child: Container(
                         width: double.infinity,
                         child: RadioListTile(
-                            title: Text("Ses3"),
+                            title: Text("Ses3",
+                                style: TextStyle(color: Color(0xFFF7ECE1))),
                             value: 6,
+                            activeColor: Color(0xFFF7ECE1),
                             groupValue: deger,
                             onChanged: (int? gelen) {
                               setState(() {
@@ -138,6 +150,17 @@ class _NotificationsState extends State<Notifications> {
                             }),
                       ))
                     ],
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Color(0xFFF7ECE1),
+                      backgroundColor: Color(0xFF8D86C9),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/user');
+                    },
+                    child: const Text("Geri Dön"),
                   ),
                 ],
               ),

@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> isLog() async {
     String? token = await getTokenFromSF();
-    final String apiUrl = 'http://10.0.2.2:3000/profile';
+    final String apiUrl = 'http://localhost:3000/profile';
     // print(token);
     try {
       final response = await http.get(
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         // print(responseData);
         Navigator.pushReplacementNamed(context, '/follow');
-      } else {
+      } else if (response.statusCode != 401) {
         // Hata durumunda hata mesajını gösteriyorum.
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login() async {
-    final String apiUrl = 'http://10.0.2.2:3000/signIn';
+    final String apiUrl = 'http://localhost:3000/signIn';
 
     final Map<String, dynamic> requestData = {
       "userName": _usernameController.text,
@@ -93,11 +93,28 @@ class _LoginPageState extends State<LoginPage> {
         await addTokenToSF(token);
         Navigator.pushReplacementNamed(context, '/addsite');
       } else {
-        // Hata durumunda hata mesajını gösteriyorum.
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Hata: ${response.statusCode} - ${response.body}'),
-          ),
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            final Map<String, dynamic> responseData = jsonDecode(response.body);
+            final String message = responseData['message'];
+            return AlertDialog(
+              backgroundColor: Color(0xFF9067C6),
+              content: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'Hata: $message',
+                  style: TextStyle(
+                    color: Color(0xFFF7ECE1),
+                    fontSize: 18.0,
+                  ),
+                ),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            );
+          },
         );
       }
     } catch (e) {
@@ -123,56 +140,103 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("PAGEPATROL"),
-      ),
+      backgroundColor: Color(0xFF242038),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: 'Username or email',
-                border: OutlineInputBorder(),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Text(
+                "PAGEPATROL",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFCAC4CE),
+                ),
               ),
             ),
-            SizedBox(height: 20),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
+            SizedBox(height: 75),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: TextField(
+                controller: _usernameController,
+                style: TextStyle(color: Color(0xFFF7ECE1)),
+                decoration: InputDecoration(
+                  labelText: 'Username or email',
+                  labelStyle: TextStyle(color: Color(0xFFF7ECE1)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFCAC4CE)),
+                  ),
+                ),
               ),
-              controller: _passwordController,
+            ),
+            SizedBox(height: 5),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: TextField(
+                obscureText: true,
+                style: TextStyle(color: Color(0xFFF7ECE1)),
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: TextStyle(color: Color(0xFFF7ECE1)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFCAC4CE)),
+                  ),
+                ),
+                controller: _passwordController,
+              ),
             ),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(child: const Text("Login"), onPressed: _login),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Color(0xFFF7ECE1),
+                    backgroundColor: Color(0xFF8D86C9),
+                  ),
+                  child: const Text("Login"),
+                  onPressed: _login,
+                ),
                 SizedBox(width: 20),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Color(0xFFF7ECE1),
+                      backgroundColor: Color(0xFF8D86C9),
+                    ),
                     child: const Text("Kayıt Ol"),
                     onPressed: () {
                       // go to new page
                       Navigator.pushNamed(context, '/kayit');
                     }),
-                ElevatedButton(
+                /*ElevatedButton(
                     child: const Text("Server"),
                     onPressed: () {
                       // go to new page
                       Navigator.pushNamed(context, '/server');
-                    }),
-                const Text("OR"),
+                    }),*/
               ],
             ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "OR",
+                  style: TextStyle(color: Color(0xFFCAC4CE)),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                foregroundColor: Color(0xFF272932),
-                backgroundColor: Color(0xFFB6C2D9),
+                foregroundColor: Color(0xFFF7ECE1),
+                backgroundColor: Color(0xFF8D86C9),
               ),
-              child: const Text("LOGIN WITH GOOGLE"),
+              child: const Text(
+                "LOGIN WITH GOOGLE",
+              ),
               onPressed: () => {},
             ),
           ],

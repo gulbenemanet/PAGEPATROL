@@ -19,7 +19,7 @@ class _EditState extends State<Edit> {
   }
 
   Future<void> _getUserSites() async {
-    final String apiUrl = 'http://10.0.2.2:3000/usersSites';
+    final String apiUrl = 'http://localhost:3000/usersSites';
     String? token = await getTokenFromSF();
 
     try {
@@ -64,7 +64,7 @@ class _EditState extends State<Edit> {
   }
 
   Future<void> _deleteSite(BuildContext context, String siteId) async {
-    final String apiUrl = 'http://10.0.2.2:3000/userId';
+    final String apiUrl = 'http://localhost:3000/userId';
     String? token = await getTokenFromSF();
     try {
       final response = await http.get(
@@ -78,7 +78,7 @@ class _EditState extends State<Edit> {
         String user_id = await jsonDecode(response.body);
         // print('Profile: $user_id');
         // Profil verilerini kullanabilirsiniz.
-        final String apiUrl = 'http://10.0.2.2:3000/unFollowLink';
+        final String apiUrl = 'http://localhost:3000/unFollowLink';
 
         final Map<String, dynamic> requestData = {
           "siteId": siteId,
@@ -142,51 +142,87 @@ class _EditState extends State<Edit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Takip Edilen Siteleri Düzenle"),
-      ),
+      backgroundColor: Color(0xFF242038),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Takip Edilen Siteler"),
+            Text("Takip Edilen Siteler",
+                style: TextStyle(fontSize: 24, color: Color(0xFFF7ECE1))),
             Column(
               children: userSites.map((site) {
-                // print(site['name']);
                 return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment
+                      .spaceBetween, // Sütunların arasında eşit boşluk bırakır
                   children: [
-                    Text(site['link'] ?? "Bilgi Yok"),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Color(0xFF272932),
-                        backgroundColor: Color(0xFFB6C2D9),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Container(
+                        constraints: BoxConstraints(
+                            maxWidth: 100), // İstenilen maksimum genişlik
+                        child: Text(site['link'] ?? "Bilgi Yok",
+                            style: TextStyle(color: Color(0xFFF7ECE1))),
                       ),
-                      child: const Text("Düzenle"),
-                      onPressed: () {
-                        // Düzenleme
-                        // Navigator.pushNamed(context, '/düzenle');
-                      },
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Color(0xFF272932),
-                        backgroundColor: Color(0xFFB6C2D9),
-                      ),
-                      child: const Text("Kaldır"),
-                      onPressed: () {
-                        _deleteSite(context, site['_id']);
-                      },
+                    SizedBox(width: 8), // İstenilen boşluk
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Color(0xFFCAC4CE),
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/edit');
+                          },
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Color(0xFFCAC4CE),
+                          ),
+                          onPressed: () {
+                            _deleteSite(context, site['_id']);
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 );
               }).toList(),
             ),
+
+            // ElevatedButton(
+            //   style: ElevatedButton.styleFrom(
+            //     foregroundColor: Color(0xFFF7ECE1),
+            //     backgroundColor: Color(0xFF8D86C9),
+            //   ),
+            //   child: const Text("Düzenle"),
+            //   onPressed: () {
+            //     // Düzenleme
+            //     // Navigator.pushNamed(context, '/düzenle');
+            //   },
+            // ),
+            // ElevatedButton(
+            //   style: ElevatedButton.styleFrom(
+            //     foregroundColor: Color(0xFF272932),
+            //     backgroundColor: Color(0xFFB6C2D9),
+            //   ),
+            //   child: const Text("Kaldır"),
+            //   onPressed: () {
+            //     _deleteSite(context, site['_id']);
+            //   },
+            // ),
+
             SizedBox(height: 100),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                foregroundColor: Color(0xFF272932),
-                backgroundColor: Color(0xFFB6C2D9),
+                foregroundColor: Color(0xFFF7ECE1),
+                backgroundColor: Color(0xFF8D86C9),
               ),
               child: const Text("Yeni Site Ekle"),
               onPressed: () {
@@ -194,11 +230,12 @@ class _EditState extends State<Edit> {
                 Navigator.pushNamed(context, '/addsite');
               },
             ),
+            SizedBox(height: 20),
             Container(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xFF272932),
-                  backgroundColor: Color(0xFFB6C2D9),
+                  foregroundColor: Color(0xFFF7ECE1),
+                  backgroundColor: Color(0xFF8D86C9),
                 ),
                 onPressed: () {
                   Navigator.pushNamed(context, '/follow');

@@ -94,7 +94,7 @@ class _MyWidgetState extends State<Register> {
                     ),
                   ),
                 ),
-                ElevatedButton.icon(
+                /*ElevatedButton.icon(
                   icon: Icon(Icons.edit),
                   label: Text("Düzenle"),
                   onPressed: () {
@@ -103,7 +103,7 @@ class _MyWidgetState extends State<Register> {
                     });
                     //print("bruh2");
                   },
-                ),
+                ),*/
               ],
             ),
             SizedBox(height: 20),
@@ -118,7 +118,7 @@ class _MyWidgetState extends State<Register> {
                     ),
                   ),
                 ),
-                ElevatedButton.icon(
+               /* ElevatedButton.icon(
                   icon: Icon(Icons.edit),
                   label: Text("Düzenle"),
                   onPressed: () {
@@ -127,7 +127,7 @@ class _MyWidgetState extends State<Register> {
                     });
                     //print("bruh2");
                   },
-                ),
+                ),*/
               ],
             ),
             SizedBox(height: 20),
@@ -142,7 +142,7 @@ class _MyWidgetState extends State<Register> {
                     ),
                   ),
                 ),
-                ElevatedButton.icon(
+               /* ElevatedButton.icon(
                   icon: Icon(Icons.edit),
                   label: Text("Düzenle"),
                   onPressed: () {
@@ -151,7 +151,7 @@ class _MyWidgetState extends State<Register> {
                     });
                     //print("bruh2");
                   },
-                ),
+                ),*/
               ],
             ),
             SizedBox(height: 20),
@@ -166,7 +166,7 @@ class _MyWidgetState extends State<Register> {
                     ),
                   ),
                 ),
-                ElevatedButton.icon(
+               /* ElevatedButton.icon(
                   icon: Icon(Icons.edit),
                   label: Text("Düzenle"),
                   onPressed: () {
@@ -175,7 +175,7 @@ class _MyWidgetState extends State<Register> {
                     });
                     //print("bruh2");
                   },
-                ),
+                ),*/
               ],
             ),
             SizedBox(height: 20),
@@ -190,7 +190,7 @@ class _MyWidgetState extends State<Register> {
                     ),
                   ),
                 ),
-                ElevatedButton.icon(
+                /*ElevatedButton.icon(
                   icon: Icon(Icons.edit),
                   label: Text("Düzenle"),
                   onPressed: () {
@@ -199,7 +199,7 @@ class _MyWidgetState extends State<Register> {
                     });
                     //print("bruh2");
                   },
-                ),
+                ),*/
               ],
             ),
             SizedBox(height: 20),
@@ -215,7 +215,7 @@ class _MyWidgetState extends State<Register> {
                     ),
                   ),
                 ),
-                ElevatedButton.icon(
+                /*ElevatedButton.icon(
                   icon: Icon(Icons.edit),
                   label: Text("Düzenle"),
                   onPressed: () {
@@ -224,9 +224,10 @@ class _MyWidgetState extends State<Register> {
                     });
                     //print("bruh2");
                   },
-                ),
+                ),*/
               ],
             ),
+            SizedBox(height: 10),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 foregroundColor: Color(0xFF272932),
@@ -235,7 +236,12 @@ class _MyWidgetState extends State<Register> {
               child: const Text("Kayıt Ol"),
               onPressed: _signUp,
             ),
+            SizedBox(height: 10),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Color(0xFF272932),
+                backgroundColor: Color(0xFFB6C2D9),
+              ),
               child: const Text("Giriş Yap"),
               onPressed: () {
                 // go to new page

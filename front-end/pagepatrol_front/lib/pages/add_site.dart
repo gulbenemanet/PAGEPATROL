@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AddSite extends StatelessWidget {
   // const AddSite({super.key});
   final TextEditingController _siteLinkController = TextEditingController();
+  final TextEditingController _siteNameController = TextEditingController();
 
   Future<void> _addSite(BuildContext context) async {
     final String apiUrl = 'http://10.0.2.2:3000/userId';
@@ -26,8 +27,9 @@ class AddSite extends StatelessWidget {
 
         final Map<String, dynamic> requestData = {
           "site": {
-            "name": " ",
+            "name": _siteNameController.text,
             "link": _siteLinkController.text,
+            "htmlPart": '',
           },
           "id": user_id
         };
@@ -104,20 +106,42 @@ class AddSite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Site Ekleme"),
-        ),
+        backgroundColor: Color(0xFF242038),
         body: Center(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-              Text("Takip etmek istediğiniz sitenin linkini yapıştırın:"),
+              Text(
+                "Takip etmek istediğiniz sitenin linkini yapıştırın:",
+                style: TextStyle(color: Color(0xFFCAC4CE)),
+              ),
               SizedBox(height: 20),
               TextField(
                 controller: _siteLinkController,
+                style: TextStyle(color: Color(0xFFF7ECE1)),
                 decoration: InputDecoration(
                   labelText: 'Eklenecek Site',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Color(0xFFF7ECE1)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFCAC4CE)),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Siteniz için isim girin:",
+                style: TextStyle(color: Color(0xFFCAC4CE)),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _siteNameController,
+                style: TextStyle(color: Color(0xFFF7ECE1)),
+                decoration: InputDecoration(
+                  labelText: 'Site İsmi',
+                  labelStyle: TextStyle(color: Color(0xFFF7ECE1)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFCAC4CE)),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -126,8 +150,8 @@ class AddSite extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Color(0xFF272932),
-                      backgroundColor: Color(0xFFB6C2D9),
+                      foregroundColor: Color(0xFFF7ECE1),
+                      backgroundColor: Color(0xFF8D86C9),
                     ),
                     child: const Text("Kaydet"),
                     onPressed: () => _addSite(context),
@@ -135,8 +159,8 @@ class AddSite extends StatelessWidget {
                   SizedBox(width: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Color(0xFF272932),
-                      backgroundColor: Color(0xFFB6C2D9),
+                      foregroundColor: Color(0xFFF7ECE1),
+                      backgroundColor: Color(0xFF8D86C9),
                     ),
                     child: const Text("Geç"),
                     onPressed: () {

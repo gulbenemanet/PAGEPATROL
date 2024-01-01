@@ -5,7 +5,6 @@ let db = require('../configs/db_connection');
 const jwt = require('jsonwebtoken');
 const Token = require('../models/token_model');
 
-
 const signIn = async(req, res) => {
     const user = await User.findOne({
         userName: req.body.userName
@@ -84,6 +83,10 @@ const signUp = async(req, res) => {
                 email: req.body.email,
                 password: hashedPassword,
                 phoneNumber: req.body.phoneNumber,
+                notification: {
+                    sms: true,
+                    mail: true
+                }
             }, (err, user) => {
                 if (err) {
                     if (err.code == 11000) {
@@ -246,31 +249,32 @@ const updateLink = (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        res.json(error);
     }
 }
 
 const followLink = (req, res) => {
     try {
         const user = User.findOneAndUpdate({ _id: req.body.id }, { $push: { followedSites: req.body.site } }, { new: true }, (err, data) => {
-            // console.log(req.body.id);
-            if (err) {
-                res.json(err);
-            } else {
-                if (data == null) {
-                    res.status(400).json({
-                        "success": false,
-                        "code": 400,
-                        "message": "Kullanıcı bulunamadı.",
-                    })
+                // console.log(req.body.id);
+                if (err) {
+                    res.json(err);
                 } else {
-                    const newFollowedSiteId = data.followedSites[data.followedSites.length - 1]._id;
-                    // console.log("Yeni eklenen followedSite'nin ID'si:", newFollowedSiteId);
-                    res.json(newFollowedSiteId);
+                    if (data == null) {
+                        res.status(400).json({
+                            "success": false,
+                            "code": 400,
+                            "message": "Kullanıcı bulunamadı.",
+                        })
+                    } else {
+                        const newFollowedSiteId = data.followedSites[data.followedSites.length - 1]._id;
+                        // console.log("Yeni eklenen followedSite'nin ID'si:", newFollowedSiteId);
+                        res.json(newFollowedSiteId);
+                    }
                 }
-            }
 
-        })
-        console.log(user);
+            })
+            // console.log(user);
     } catch (err) {
         res.json(err)
     }

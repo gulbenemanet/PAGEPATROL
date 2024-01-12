@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class _SelectSectionState extends State<SelectSection> {
     final String apiUrl = 'http://10.0.2.2:3000/userId';
     String? token = await getTokenFromSF();
     String? siteId = await getLinkIdFromSF();
+    Array? htmlPart;
 
     String cleanedObjectIdString = await siteId!.replaceAll("\"", "");
     // print("dfmkdfm" + cleanedObjectIdString);
@@ -49,7 +51,7 @@ class _SelectSectionState extends State<SelectSection> {
         final Map<String, dynamic> requestData = {
           "id": user_id,
           "siteId": cleanedObjectIdString,
-          "htmlPart": 'hjbhj'
+          "htmlPart": htmlPart
         };
 
         try {
@@ -154,7 +156,7 @@ class _SelectSectionState extends State<SelectSection> {
 
   injectJavascript(WebViewController controller) async {
     controller.runJavaScript(
-        ''' console.log('deneme'); window.onclick = (event) => {console.log("fkdjnk" + event.target.outerHTML);''');
+        '''console.log('deneme'); window.onclick = (event) => {console.log("fkdjnk" + event.target.outerHTML);''');
   }
 
   @override
@@ -184,18 +186,32 @@ class _SelectSectionState extends State<SelectSection> {
                     child: ElevatedButton(
                       onPressed: () {
                         controller.runJavaScript('''
-                      console.log('FAB clicked');
-                      document.body.style.touchAction = 'none';
-                      document.body.style.overflow = 'hidden';
-                      var links = document.getElementsByTagName('a');
-                      for (var i = 0; i < links.length; i++) {
-                        links[i].addEventListener('click', function(event) {
-                          event.preventDefault(); // Lİnkleri kapa
-                        });
-                      }
-                      window.onclick = (event) => {event.target.style.borderStyle = "solid"; event.target.style.borderWidth = "4px";event.target.style.borderColor = "red";}
-                      
-                    ''');
+                          // console.log('FAB clicked');
+                          let htmlPart = []; 
+                          let counter = 0;
+                          document.body.style.touchAction = 'none';
+                          document.body.style.overflow = 'hidden';
+                          var links = document.getElementsByTagName('a');
+                          for (var i = 0; i < links.length; i++) {
+                            links[i].addEventListener('click', function(event) {
+                              event.preventDefault(); // Lİnkleri kapa
+                            });
+                          }
+                          let isBorderRed = false;
+
+                          window.onclick = (event) => {
+                            if(isBorderRed) {
+                              event.target.style.border = "none";
+                            } else {
+                              event.target.style.borderStyle = "solid"; 
+                              event.target.style.borderWidth = "4px";
+                              event.target.style.borderColor = "red";
+                              htmlPart.push(event.target.outerHTML);                          
+                            }
+                            isBorderRed = !isBorderRed;
+                            counter++;
+                          }                      
+                        ''');
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

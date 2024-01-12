@@ -171,7 +171,6 @@ const update_profile = async(req, res) => {
 const usersSites = async(req, res) => {
     // console.log(req.user.followedSites);
     try {
-
         res.status(200).json({
             "success": true,
             "code": 200,
@@ -179,6 +178,15 @@ const usersSites = async(req, res) => {
             "data": req.user.followedSites
         })
 
+    } catch (error) {
+        res.json(error);
+    }
+
+}
+
+const userNotification = async(req, res) => {
+    try {
+        res.json(req.user.notification)
     } catch (error) {
         res.json(error);
     }
@@ -328,6 +336,26 @@ const userId = async(req, res) => {
     res.json(req.user.id);
 }
 
+const notification = async(req, res) => {
+    try {
+        const user = await User.findOneAndUpdate({ _id: req.body.id }, {
+            $set: {
+                'notification.sms': req.body.sms,
+                'notification.mail': req.body.mail,
+            },
+        }, { new: true })
+        if (!user) {
+            res.json('Güncelleme yapılamadı.')
+        } else {
+            res.json('Bildirim ayarları kaydedildi.')
+        }
+    } catch (error) {
+        res.json(error);
+    }
+
+}
+
+
 module.exports = {
     signUp,
     signIn,
@@ -343,5 +371,7 @@ module.exports = {
     userId,
     usersSites,
     updateLink,
-    update_profile
+    update_profile,
+    notification,
+    userNotification
 };

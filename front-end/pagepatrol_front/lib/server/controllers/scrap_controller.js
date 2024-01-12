@@ -42,33 +42,33 @@ const scrapLink = async(user) => {
                         const updatesUser = await User.updateOne({ _id: user._id, 'followedSites._id': site._id }, { $set: { 'followedSites.$.htmlPart': newHtml } }, { new: true })
                         if (updatesUser) {
                             console.log(`${user.userName} kullanıcısının siteleri güncellendi.`);
+
+                            client.publish('notification', `Değişiklik tespit edildi. User Id:${user._id} Site Id: ${site._id} Site Linki: ${site.link}`);
+                            if (user.notification.mail == true) {
+                                transporter.verify(function(error, success) {
+                                    if (error) throw error;
+                                    else {
+                                        console.log('Mail bağlantısı başarıyla sağlandı');
+                                        let mailOptions = {
+                                            from: process.env.MAIL,
+                                            to: user.email,
+                                            subject: 'Değişiklik algılandı.',
+                                            text: site.name + "Adlı sitede değişiklik algılandı. Site Linki: " + site.link
+                                        };
+                                        transporter.sendMail(mailOptions, function(error, info) {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                console.log('Email sent: ' + user.userName + info.response);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         }
                         // client.publish('notification', `Değişiklik tespit edildi. User Id:${user._id} Site Id: ${site._id} Site Linki: ${site.link}`);
                     } else {
                         console.log(`${user.userName} kullanıcısından, Site: ${site.name} için yeni içerik tespit edilmedi.`);
-                        client.publish('notification', `Değişiklik tespit edildi. User Id:${user._id} Site Id: ${site._id} Site Linki: ${site.link}`);
-                        if (user.notification.mail == true) {
-                            transporter.verify(function(error, success) {
-                                if (error) throw error;
-                                else {
-                                    console.log('Mail bağlantısı başarıyla sağlandı');
-                                    let mailOptions = {
-                                        from: process.env.MAIL,
-                                        to: user.email,
-                                        subject: 'Değişiklik algılandı.',
-                                        text: site.name + "Adlı sitede değişiklik algılandı. Site Linki: " + site.link
-                                    };
-                                    transporter.sendMail(mailOptions, function(error, info) {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            console.log('Email sent: ' + user.userName + info.response);
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                        //CF4A4QBT83CJQ11NVCY2U5PQ
                     }
                 } else {
                     console.log(`${user.userName} kullanıcısından, Site: ${site.name} için önceki veri bulunamadı.`);

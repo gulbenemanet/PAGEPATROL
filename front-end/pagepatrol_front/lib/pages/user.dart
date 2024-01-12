@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
           tno = responseData['data']['phoneNumber'];
           id = responseData['data']['_id'];
         });
-        print('Profile: $responseData');
+        // print('Profile: $responseData');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

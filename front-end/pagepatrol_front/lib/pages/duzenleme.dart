@@ -143,107 +143,110 @@ class _EditState extends State<Edit> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF242038),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Takip Edilen Siteler",
-                style: TextStyle(fontSize: 24, color: Color(0xFFF7ECE1))),
-            Column(
-              children: userSites.map((site) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment
-                      .spaceBetween, // Sütunların arasında eşit boşluk bırakır
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(25),
+                  child: Text("Takip Edilen Siteler",
+                      style: TextStyle(fontSize: 24, color: Color(0xFFF7ECE1))),
+                ),
+                Container(
+                  width: 300,
+                  height: 400,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: userSites.map((site) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment
+                            .spaceBetween, // Sütunların arasında eşit boşluk bırakır
+                        children: [
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Container(
+                              constraints: BoxConstraints(
+                                  maxWidth: 100), // İstenilen maksimum genişlik
+                              child: Text(site['name'] ?? "Bilgi Yok",
+                                  style: TextStyle(
+                                    color: Color(0xFFF7ECE1),
+                                    fontSize: 18,
+                                  )),
+                            ),
+                          ),
+                          SizedBox(width: 8), // İstenilen boşluk
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Color(0xFFCAC4CE),
+                                ),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/select');
+                                },
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Color(0xFFCAC4CE),
+                                ),
+                                onPressed: () {
+                                  _deleteSite(context, site['_id']);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(height: 100),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Container(
-                        constraints: BoxConstraints(
-                            maxWidth: 100), // İstenilen maksimum genişlik
-                        child: Text(site['name'] ?? "Bilgi Yok",
-                            style: TextStyle(color: Color(0xFFF7ECE1))),
+                    Container(
+                      width: 150,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Color(0xFFF7ECE1),
+                          backgroundColor: Color(0xFF8D86C9),
+                        ),
+                        child: const Text("Yeni Site Ekle"),
+                        onPressed: () {
+                          // Ekleme
+                          Navigator.pushNamed(context, '/addsite');
+                        },
                       ),
                     ),
-                    SizedBox(width: 8), // İstenilen boşluk
-                    Column(
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.edit,
-                            color: Color(0xFFCAC4CE),
-                          ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/select');
-                          },
+                    Container(
+                      width: 150,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Color(0xFFF7ECE1),
+                          backgroundColor: Color(0xFF8D86C9),
                         ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Color(0xFFCAC4CE),
-                          ),
-                          onPressed: () {
-                            _deleteSite(context, site['_id']);
-                          },
-                        ),
-                      ],
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/follow');
+                        },
+                        child: const Text("Ana Sayfaya Dön"),
+                      ),
                     ),
                   ],
-                );
-              }).toList(),
-            ),
-
-            // ElevatedButton(
-            //   style: ElevatedButton.styleFrom(
-            //     foregroundColor: Color(0xFFF7ECE1),
-            //     backgroundColor: Color(0xFF8D86C9),
-            //   ),
-            //   child: const Text("Düzenle"),
-            //   onPressed: () {
-            //     // Düzenleme
-            //     // Navigator.pushNamed(context, '/düzenle');
-            //   },
-            // ),
-            // ElevatedButton(
-            //   style: ElevatedButton.styleFrom(
-            //     foregroundColor: Color(0xFF272932),
-            //     backgroundColor: Color(0xFFB6C2D9),
-            //   ),
-            //   child: const Text("Kaldır"),
-            //   onPressed: () {
-            //     _deleteSite(context, site['_id']);
-            //   },
-            // ),
-
-            SizedBox(height: 100),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Color(0xFFF7ECE1),
-                backgroundColor: Color(0xFF8D86C9),
-              ),
-              child: const Text("Yeni Site Ekle"),
-              onPressed: () {
-                // Ekleme
-                Navigator.pushNamed(context, '/addsite');
-              },
-            ),
-            SizedBox(height: 20),
-            Container(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xFFF7ECE1),
-                  backgroundColor: Color(0xFF8D86C9),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/follow');
-                },
-                child: const Text("Ana Sayfaya Dön"),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -66,6 +66,11 @@ class _FollowState extends State<Follow> {
     return tokenValue;
   }
 
+  Future<void> addLinkToSF(String link) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userSiteLink', link);
+  }
+
   Future<void> _getUserSites() async {
     final String apiUrl = 'http://10.0.2.2:3000/usersSites';
     String? token = await getTokenFromSF();
@@ -167,90 +172,116 @@ class _FollowState extends State<Follow> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF242038),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "Takip Edilenler",
-              style: TextStyle(color: Color(0xFFF7ECE1), fontSize: 24),
-            ),
-            SizedBox(height: 50),
-            Column(
-              children: userSites.map((site) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment
-                      .spaceBetween, // Sütunların arasında eşit boşluk bırakır
-                  children: [
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Container(
-                        width: 100,
-                        height: 250,
-                        color: Color(0xFF8D86C9),
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              site['name'] ?? "Bilgi Yok",
-                              style: TextStyle(
-                                  fontSize: 18, color: Color(0xFFF7ECE1)),
-                            ),
-                            SizedBox(height: 20),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Color(0xFFF7ECE1),
-                                backgroundColor: Color(0xFF9067C6),
-                              ),
-                              onPressed: () async {
-                                setState(() {
-                                  _launched =
-                                      _launchInBrowser(Uri.parse(site['link']));
-                                });
-                              },
-                              child: const Text("Siteye Git"),
-                            ),
-                            Container(
-                              width: 100,
-                              height: 100,
-                              color: Color(0xFFB6C2D9),
-                              // child: WebViewWidget(
-                              //     // controller: controller,
-                              //     ),
-                            ),
-                            SizedBox(height: 20),
-                          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 3),
+                  color: Color(0xFF8D86C9),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Color(0xFFCAC4CE),
                         ),
-                        constraints: BoxConstraints(
-                            maxWidth: 100), // İstenilen maksimum genişlik
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/edit');
+                        },
                       ),
-                    ),
-                    SizedBox(width: 8), // İstenilen boşluk
-                  ],
-                );
-              }).toList(),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.people,
+                          color: Color(0xFFCAC4CE),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/user');
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(20),
+                  child: Text(
+                    "Takip Edilenler",
+                    style: TextStyle(color: Color(0xFFF7ECE1), fontSize: 24),
+                  ),
+                ),
+                SizedBox(height: 50),
+                Column(
+                  children: userSites.map((site) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment
+                          .spaceBetween, // Sütunların arasında eşit boşluk bırakır
+                      children: [
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            // width: 100,
+                            // height: 100,
+                            // color: Color(0xFF8D86C9),
+                            padding: EdgeInsets.all(15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  site['name'] ?? "Bilgi Yok",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Color(0xFFF7ECE1)),
+                                ),
+                                SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Color(0xFFF7ECE1),
+                                        backgroundColor: Color(0xFF9067C6),
+                                      ),
+                                      onPressed: () async {
+                                        setState(() {
+                                          _launched = _launchInBrowser(
+                                              Uri.parse(site['link']));
+                                        });
+                                      },
+                                      child: const Text("Siteye Git"),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Color(0xFFF7ECE1),
+                                        backgroundColor: Color(0xFF9067C6),
+                                      ),
+                                      onPressed: () {
+                                        addLinkToSF(site['link']);
+                                        Navigator.pushNamed(
+                                            context, '/showWebView');
+                                      },
+                                      child: Text('Göster'),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                              ],
+                            ),
+                            constraints: BoxConstraints(
+                                maxWidth: 100), // İstenilen maksimum genişlik
+                          ),
+                        ),
+                        SizedBox(width: 8), // İstenilen boşluk
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
-            IconButton(
-              icon: const Icon(
-                Icons.edit,
-                color: Color(0xFFCAC4CE),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/edit');
-              },
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.people,
-                color: Color(0xFFCAC4CE),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/user');
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

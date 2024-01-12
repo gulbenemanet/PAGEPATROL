@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final String token = responseData['data']['token'];
         await addTokenToSF(token);
-        Navigator.pushReplacementNamed(context, '/addsite');
+        Navigator.pushReplacementNamed(context, '/follow');
       } else {
         showDialog(
           context: context,

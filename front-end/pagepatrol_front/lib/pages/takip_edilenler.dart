@@ -29,73 +29,6 @@ class Follow extends StatefulWidget {
 }
 
 class _FollowState extends State<Follow> {
-<<<<<<< HEAD
-  // final client = MqttServerClient('localhost', '1883');
-
-  // late MqttServerClient client;
-  // MqttServerClient? client;
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   // MQTT client oluştur
-  //   final client = MqttServerClient.withPort('mqtt://192.168.177.4', '', 1883);
-  //   final client = MqttServerClient.withPort('192.168.177.4', '', 1883);
-
-  //   // MQTT olayları dinle
-  //   client.onConnected = _onConnected;
-  //   client.onDisconnected = _onDisconnected;
-  //   client.onSubscribed = _onSubscribed;
-  //   client.onSubscribeFail = _onSubscribeFail;
-
-  //   // MQTT broker'ına bağlan
-  //   client.connect();
-  // }
-
-  // @override
-  // void dispose() {
-  //   client.disconnect();
-  //   client?.disconnect();
-  //   super.dispose();
-  // }
-
-  // void _onConnected() {
-  //   print('MQTT broker ile bağlantı kuruldu');
-
-  //   // Belirli bir konuyu dinlemeye başla
-  //   client.subscribe('notification', MqttQos.exactlyOnce);
-  // }
-
-  // void _onDisconnected() {
-  //   print('MQTT broker ile bağlantı kesildi');
-  // }
-
-  // void _onSubscribed(String topic) {
-  //   print('Konu dinlemeye başlandı: $topic');
-  // }
-
-  //   client?.subscribe('notification', MqttQos.exactlyOnce);
-  //   client!.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-  //     final MqttPublishMessage message = c[0].payload as MqttPublishMessage;
-  //     final String payload =
-  //         MqttPublishPayload.bytesToStringAsString(message.payload.message);
-
-  //     print('Received message on topic ${c[0].topic}: $payload');
-  //   });
-  // }
-
-  // void _onDisconnected() {
-  //   print('MQTT broker ile bağlantı kesildi');
-  // }
-
-  // void _onSubscribed(String topic) {
-  //   print('Konu dinlemeye başlandı: $topic');
-  // }
-
-  // void _onSubscribeFail(String topic) {
-  //   print('Konu dinleme başarısız: $topic');
-  // }
-=======
   MqttServerClient? client;
   List<Map<String, dynamic>> userSites = [];
   bool _hasCallSupport = false;
@@ -234,67 +167,11 @@ class _FollowState extends State<Follow> {
     client?.disconnect();
     super.dispose();
   }
->>>>>>> gulben
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF242038),
-<<<<<<< HEAD
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "Takip Edilenler",
-              style: TextStyle(color: Color(0xFFF7ECE1), fontSize: 24),
-            ),
-            SizedBox(height: 50),
-            Container(
-                width: 300,
-                height: 250,
-                color: Color(0xFF8D86C9),
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      "Takip Edilen 1",
-                      style: TextStyle(fontSize: 18, color: Color(0xFFF7ECE1)),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Color(0xFFF7ECE1),
-                        backgroundColor: Color(0xFF9067C6),
-                      ),
-                      onPressed: () {
-                        //Navigator.pushNamed(context, '/');
-                      },
-                      child: const Text("Siteye Git"),
-                    ),
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     final builder = MqttClientPayloadBuilder();
-                    //     builder.addString('Merhaba from Flutter');
-                    //     client.publishMessage('notification',
-                    //         MqttQos.exactlyOnce, builder.payload!);
-                    //   },
-                    //   onPressed: _onConnected,
-                    //   // () {
-                    //   //   final builder = MqttClientPayloadBuilder();
-                    //   //   builder.addString('Merhaba from Flutter');
-                    //   //   client.publishMessage('notification',
-                    //   //       MqttQos.exactlyOnce, builder.payload!);
-                    //   // },
-                    //   child: Text('Bildirim Gönder'),
-                    // ),
-                    Container(
-                      color: Color(0xFFB6C2D9),
-                      child: Text(
-                        "Siteden Gelen Veriler",
-=======
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -315,7 +192,6 @@ class _FollowState extends State<Follow> {
                         onPressed: () {
                           Navigator.pushNamed(context, '/edit');
                         },
->>>>>>> gulben
                       ),
                       IconButton(
                         icon: const Icon(

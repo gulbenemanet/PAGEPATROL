@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +32,7 @@ class _SelectSectionState extends State<SelectSection> {
     final String apiUrl = 'http://10.0.2.2:3000/userId';
     String? token = await getTokenFromSF();
     String? siteId = await getLinkIdFromSF();
+    Array? htmlPart;
 
     String cleanedObjectIdString = await siteId!.replaceAll("\"", "");
     // print("dfmkdfm" + cleanedObjectIdString);
@@ -42,12 +46,12 @@ class _SelectSectionState extends State<SelectSection> {
       );
       if (response.statusCode == 200) {
         String user_id = await jsonDecode(response.body);
-        print(htmlPartB);
+
         final String apiUrl = 'http://10.0.2.2:3000/updateLink';
         final Map<String, dynamic> requestData = {
           "id": user_id,
           "siteId": cleanedObjectIdString,
-          "htmlPart": htmlPartB
+          "htmlPart": htmlPart
         };
 
         try {
@@ -130,7 +134,7 @@ class _SelectSectionState extends State<SelectSection> {
   }
 
   void _initWebView() async {
-    link = await getLinkFromSF() ?? 'https://blog.logrocket.com';
+    link = (await getLinkFromSF())!;
     if (link.isNotEmpty) {
       print(link);
       controller
@@ -150,11 +154,9 @@ class _SelectSectionState extends State<SelectSection> {
     }
   }
 
-  String? htmlPartB;
   injectJavascript(WebViewController controller) async {
     controller.runJavaScript(
-        ''' console.log('deneme'); window.onclick = (event) => {console.log("fkdjnk" + event.target.outerHTML); htmlPartB = event.target.outerHTML} ''');
-    // htmlPartB = controller.runJavaScriptReturningResult(javaScript)
+        '''console.log('deneme'); window.onclick = (event) => {console.log("fkdjnk" + event.target.outerHTML);''');
   }
 
   @override
@@ -184,18 +186,32 @@ class _SelectSectionState extends State<SelectSection> {
                     child: ElevatedButton(
                       onPressed: () {
                         controller.runJavaScript('''
-                      console.log('FAB clicked');
-                      document.body.style.touchAction = 'none';
-                      document.body.style.overflow = 'hidden';
-                      var links = document.getElementsByTagName('a');
-                      for (var i = 0; i < links.length; i++) {
-                        links[i].addEventListener('click', function(event) {
-                          event.preventDefault(); // Lİnkleri kapa
-                        });
-                      }
-                      window.onclick = (event) => {event.target.style.borderStyle = "solid"; event.target.style.borderWidth = "4px";event.target.style.borderColor = "red";}
-                      
-                    ''');
+                          // console.log('FAB clicked');
+                          let htmlPart = []; 
+                          let counter = 0;
+                          document.body.style.touchAction = 'none';
+                          document.body.style.overflow = 'hidden';
+                          var links = document.getElementsByTagName('a');
+                          for (var i = 0; i < links.length; i++) {
+                            links[i].addEventListener('click', function(event) {
+                              event.preventDefault(); // Lİnkleri kapa
+                            });
+                          }
+                          let isBorderRed = false;
+
+                          window.onclick = (event) => {
+                            if(isBorderRed) {
+                              event.target.style.border = "none";
+                            } else {
+                              event.target.style.borderStyle = "solid"; 
+                              event.target.style.borderWidth = "4px";
+                              event.target.style.borderColor = "red";
+                              htmlPart.push(event.target.outerHTML);                          
+                            }
+                            isBorderRed = !isBorderRed;
+                            counter++;
+                          }                      
+                        ''');
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -231,11 +247,12 @@ class _SelectSectionState extends State<SelectSection> {
                     child: ElevatedButton(
                       onPressed: () {
                         controller.runJavaScript('''
-                          document.body.style.touchAction = 'auto';
-                          document.body.style.overflow = 'visible';
+                          // document.body.style.touchAction = 'auto';
+                          // document.body.style.overflow = 'visible';
 
                         ''');
                         _addHTML(context);
+                        Navigator.pushNamed(context, '/follow');
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

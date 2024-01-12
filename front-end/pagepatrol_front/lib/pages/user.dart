@@ -30,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _getProfile(BuildContext context) async {
-    final String apiUrl = 'http://localhost:3000/profile';
+    final String apiUrl = 'http://10.0.2.2:3000/profile';
     String? token = await getTokenFromSF();
     try {
       final response = await http.get(
@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
           tno = responseData['data']['phoneNumber'];
           id = responseData['data']['_id'];
         });
-        print('Profile: $responseData');
+        // print('Profile: $responseData');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> updateUserProfile() async {
     // Profil güncelleme işlemleri burada gerçekleştirilecek
     // Örnek bir HTTP isteği:
-    final String apiUrl = 'http://localhost:3000/update_profile';
+    final String apiUrl = 'http://10.0.2.2:3000/update_profile';
     final response = await http.put(
       Uri.parse(apiUrl),
       body: {

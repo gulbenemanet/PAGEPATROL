@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> isLog() async {
     String? token = await getTokenFromSF();
-    final String apiUrl = 'http://localhost:3000/profile';
+    final String apiUrl = 'http://10.0.2.2:3000/profile';
     // print(token);
     try {
       final response = await http.get(
@@ -53,11 +53,13 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       print(e);
       // Genel hata durumunda hata mesajını gösteriyorum.
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Bir hata oluştu: $e'),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Bir hata oluştu: $e'),
+          ),
+        );
+      }
     }
   }
 
@@ -71,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login() async {
-    final String apiUrl = 'http://localhost:3000/signIn';
+    final String apiUrl = 'http://10.0.2.2:3000/signIn';
 
     final Map<String, dynamic> requestData = {
       "userName": _usernameController.text,
@@ -91,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final String token = responseData['data']['token'];
         await addTokenToSF(token);
-        Navigator.pushReplacementNamed(context, '/addsite');
+        Navigator.pushReplacementNamed(context, '/follow');
       } else {
         showDialog(
           context: context,

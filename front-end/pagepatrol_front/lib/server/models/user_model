@@ -41,7 +41,17 @@ const userSchema = new Schema({
         htmlPart: {
             type: String
         }
-    }]
+    }],
+    notification: {
+        sms: {
+            type: Boolean,
+            default: false
+        },
+        mail: {
+            type: Boolean,
+            default: false
+        }
+    }
 }, { collection: 'users' })
 
 const User = mongoose.model('users', userSchema)

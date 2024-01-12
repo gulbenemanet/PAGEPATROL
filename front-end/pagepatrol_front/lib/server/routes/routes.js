@@ -14,13 +14,15 @@ router.post('/followLink', apiController.followLink);
 router.post('/unFollowLink', apiController.unFollowLink);
 router.get('/users', apiController.users);
 router.get('/usersSites', auth, apiController.usersSites);
-router.get('/signUp', apiController.signUpDeneme)
-router.get('/signIn', apiController.signInDeneme)
-router.get('/profile', auth, apiController.profile)
-router.get('/userId', auth, apiController.userId)
-router.get('/logOut', auth, apiController.logOut)
-router.post('/updateLink', apiController.updateLink)
-router.put('/update_profile', apiController.update_profile)
+router.get('/userNotification', auth, apiController.userNotification);
+router.get('/signUp', apiController.signUpDeneme);
+router.get('/signIn', apiController.signInDeneme);
+router.get('/profile', auth, apiController.profile);
+router.get('/userId', auth, apiController.userId);
+router.get('/logOut', auth, apiController.logOut);
+router.post('/updateLink', apiController.updateLink);
+router.put('/update_profile', apiController.update_profile);
+router.put('/notification', apiController.notification);
 
 router.get('/api/google', passport.authenticate('google', {
     scope: ['profile', 'email']

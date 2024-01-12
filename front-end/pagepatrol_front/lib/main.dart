@@ -9,6 +9,7 @@ import 'package:pagepatrol_front/pages/takip_bolum_sec.dart';
 import 'package:pagepatrol_front/pages/takip_edilenler.dart';
 import 'package:pagepatrol_front/pages/user.dart';
 import 'package:pagepatrol_front/pages/server_deneme.dart';
+import 'package:pagepatrol_front/pages/showWebView.dart';
 
 void main() => runApp(const MyApp());
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/homepage': (context) => const HomePage(),
         '/addsite': (context) => AddSite(),
         '/select': (context) => SelectSection(),
+        '/showWebView': (context) => ShowWebView(),
         '/follow': (context) => Follow(),
         '/edit': (context) => const Edit(),
         '/user': (context) => const User(),

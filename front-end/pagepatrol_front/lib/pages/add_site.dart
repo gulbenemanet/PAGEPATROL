@@ -6,9 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AddSite extends StatelessWidget {
   // const AddSite({super.key});
   final TextEditingController _siteLinkController = TextEditingController();
+  final TextEditingController _siteNameController = TextEditingController();
 
   Future<void> _addSite(BuildContext context) async {
-    final String apiUrl = 'http://localhost:3000/userId';
+    final String apiUrl = 'http://10.0.2.2:3000/userId';
     String? token = await getTokenFromSF();
     try {
       final response = await http.get(
@@ -22,12 +23,13 @@ class AddSite extends StatelessWidget {
         String user_id = await jsonDecode(response.body);
         // print('Profile: $user_id');
         // Profil verilerini kullanabilirsiniz.
-        final String apiUrl = 'http://localhost:3000/followLink';
+        final String apiUrl = 'http://10.0.2.2:3000/followLink';
 
         final Map<String, dynamic> requestData = {
           "site": {
-            "name": " ",
+            "name": _siteNameController.text,
             "link": _siteLinkController.text,
+            "htmlPart": '',
           },
           "id": user_id
         };
@@ -119,6 +121,23 @@ class AddSite extends StatelessWidget {
                 style: TextStyle(color: Color(0xFFF7ECE1)),
                 decoration: InputDecoration(
                   labelText: 'Eklenecek Site',
+                  labelStyle: TextStyle(color: Color(0xFFF7ECE1)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFCAC4CE)),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Siteniz için isim girin:",
+                style: TextStyle(color: Color(0xFFCAC4CE)),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _siteNameController,
+                style: TextStyle(color: Color(0xFFF7ECE1)),
+                decoration: InputDecoration(
+                  labelText: 'Site İsmi',
                   labelStyle: TextStyle(color: Color(0xFFF7ECE1)),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFFCAC4CE)),

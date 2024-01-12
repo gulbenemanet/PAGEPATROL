@@ -83,6 +83,10 @@ const signUp = async(req, res) => {
                 email: req.body.email,
                 password: hashedPassword,
                 phoneNumber: req.body.phoneNumber,
+                notification: {
+                    sms: true,
+                    mail: true
+                }
             }, (err, user) => {
                 if (err) {
                     if (err.code == 11000) {
@@ -167,7 +171,6 @@ const update_profile = async(req, res) => {
 const usersSites = async(req, res) => {
     // console.log(req.user.followedSites);
     try {
-
         res.status(200).json({
             "success": true,
             "code": 200,
@@ -175,6 +178,15 @@ const usersSites = async(req, res) => {
             "data": req.user.followedSites
         })
 
+    } catch (error) {
+        res.json(error);
+    }
+
+}
+
+const userNotification = async(req, res) => {
+    try {
+        res.json(req.user.notification)
     } catch (error) {
         res.json(error);
     }
@@ -245,31 +257,32 @@ const updateLink = (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        res.json(error);
     }
 }
 
 const followLink = (req, res) => {
     try {
         const user = User.findOneAndUpdate({ _id: req.body.id }, { $push: { followedSites: req.body.site } }, { new: true }, (err, data) => {
-            // console.log(req.body.id);
-            if (err) {
-                res.json(err);
-            } else {
-                if (data == null) {
-                    res.status(400).json({
-                        "success": false,
-                        "code": 400,
-                        "message": "Kullanıcı bulunamadı.",
-                    })
+                // console.log(req.body.id);
+                if (err) {
+                    res.json(err);
                 } else {
-                    const newFollowedSiteId = data.followedSites[data.followedSites.length - 1]._id;
-                    // console.log("Yeni eklenen followedSite'nin ID'si:", newFollowedSiteId);
-                    res.json(newFollowedSiteId);
+                    if (data == null) {
+                        res.status(400).json({
+                            "success": false,
+                            "code": 400,
+                            "message": "Kullanıcı bulunamadı.",
+                        })
+                    } else {
+                        const newFollowedSiteId = data.followedSites[data.followedSites.length - 1]._id;
+                        // console.log("Yeni eklenen followedSite'nin ID'si:", newFollowedSiteId);
+                        res.json(newFollowedSiteId);
+                    }
                 }
-            }
 
-        })
-        console.log(user);
+            })
+            // console.log(user);
     } catch (err) {
         res.json(err)
     }
@@ -323,6 +336,26 @@ const userId = async(req, res) => {
     res.json(req.user.id);
 }
 
+const notification = async(req, res) => {
+    try {
+        const user = await User.findOneAndUpdate({ _id: req.body.id }, {
+            $set: {
+                'notification.sms': req.body.sms,
+                'notification.mail': req.body.mail,
+            },
+        }, { new: true })
+        if (!user) {
+            res.json('Güncelleme yapılamadı.')
+        } else {
+            res.json('Bildirim ayarları kaydedildi.')
+        }
+    } catch (error) {
+        res.json(error);
+    }
+
+}
+
+
 module.exports = {
     signUp,
     signIn,
@@ -338,5 +371,7 @@ module.exports = {
     userId,
     usersSites,
     updateLink,
-    update_profile
+    update_profile,
+    notification,
+    userNotification
 };

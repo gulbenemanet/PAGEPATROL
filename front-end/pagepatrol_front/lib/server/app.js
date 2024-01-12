@@ -36,6 +36,6 @@ app.listen(process.env.PORT, () => {
 
 const routes = require('./routes/routes');
 require('./configs/token_black_list_interval')
-    // require('./controllers/scrap_controller')
+require('./controllers/scrap_controller')
 
 app.use('/', routes);
